@@ -1,0 +1,14 @@
+ipykernel
+dotenv
+markitdown[all]
+langchain_community
+unstructured
+markdown
+langchain_huggingface
+langchain_chroma
+langchain_groq
+wikipedia
+arxiv
+duckduckgo-search
+streamlit
+sentence-transformers
