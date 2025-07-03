@@ -9,7 +9,7 @@ langchain_chroma
 langchain_groq
 wikipedia
 arxiv
-duckduckgo-search
+duckduckgo-search==8.0.5
 streamlit
 sentence-transformers
 pysqlite3-binary
