@@ -12,3 +12,4 @@ arxiv
 duckduckgo-search
 streamlit
 sentence-transformers
+pysqlite3-binary
