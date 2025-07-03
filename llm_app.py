@@ -26,10 +26,10 @@ from langchain.chains import create_history_aware_retriever, create_retrieval_ch
 from langchain.chains.combine_documents import create_stuff_documents_chain
 import tempfile
 
-groq_api_key = st.secrets["groq_api_key"]
-os.environ['HF_TOKEN'] = st.secrets["hf_token"]
-os.environ['LANGCHAIN_API_KEY'] = st.secrets["langchain_api_key"]
-os.environ['LANGCHAIN_PROJECT'] = st.secrets["langchain_project"]
+groq_api_key = st.secrets["GROQ_API_KEY"]
+os.environ['HF_TOKEN'] = st.secrets["HF_TOKEN"]
+os.environ['LANGCHAIN_API_KEY'] = st.secrets["LANGCHAIN_API_KEY"]
+os.environ['LANGCHAIN_PROJECT'] = st.secrets["LANGCHAIN_PROJECT"]
 os.environ['LANGCHAIN_TRACING_V2'] = "true"
 
 st.title("📚 Document Ingestion & Retrieval App | AI Agent")
