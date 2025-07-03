@@ -1,19 +1,4 @@
 import os
-#from dotenv import load_dotenv
-#load_dotenv()
-
-#groq_api_key=os.getenv("GROQ_API_KEY")
-#os.environ['HF_TOKEN'] = os.getenv("HF_TOKEN")
-#os.environ['LANGCHAIN_API_KEY'] = os.getenv("LANGCHAIN_API_KEY")
-#os.environ['LANGCHAIN_PROJECT'] = os.getenv("LANGCHAIN_PROJECT")
-#os.environ['LANGCHAIN_TRACING_V2'] = "true"
-
-groq_api_key = st.secrets["groq_api_key"]
-os.environ['HF_TOKEN'] = st.secrets["hf_token"]
-os.environ['LANGCHAIN_API_KEY'] = st.secrets["langchain_api_key"]
-os.environ['LANGCHAIN_PROJECT'] = st.secrets["langchain_project"]
-os.environ['LANGCHAIN_TRACING_V2'] = "true"
-
 import streamlit as st
 from markitdown import MarkItDown
 from langchain_community.document_loaders import UnstructuredMarkdownLoader
@@ -36,6 +21,12 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 import tempfile
+
+groq_api_key = st.secrets["groq_api_key"]
+os.environ['HF_TOKEN'] = st.secrets["hf_token"]
+os.environ['LANGCHAIN_API_KEY'] = st.secrets["langchain_api_key"]
+os.environ['LANGCHAIN_PROJECT'] = st.secrets["langchain_project"]
+os.environ['LANGCHAIN_TRACING_V2'] = "true"
 
 st.title("📚 Document Ingestion & Retrieval App | AI Agent")
 st.info("👋 Welcome! In the sidebar, please select either the RAG mode for document ingestion and retrieval or the AI agent mode for wikipedia, arxiv, and/or web search.")
