@@ -1,12 +1,18 @@
 import os
-from dotenv import load_dotenv
-load_dotenv()
+#from dotenv import load_dotenv
+#load_dotenv()
 
-groq_api_key=os.getenv("GROQ_API_KEY")
-os.environ['HF_TOKEN']=os.getenv("HF_TOKEN")
-os.environ['LANGCHAIN_API_KEY']=os.getenv("LANGCHAIN_API_KEY")
-os.environ['LANGCHAIN_PROJECT']=os.getenv("LANGCHAIN_PROJECT")
-os.environ['LANGCHAIN_TRACING_V2']="true"
+#groq_api_key=os.getenv("GROQ_API_KEY")
+#os.environ['HF_TOKEN'] = os.getenv("HF_TOKEN")
+#os.environ['LANGCHAIN_API_KEY'] = os.getenv("LANGCHAIN_API_KEY")
+#os.environ['LANGCHAIN_PROJECT'] = os.getenv("LANGCHAIN_PROJECT")
+#os.environ['LANGCHAIN_TRACING_V2'] = "true"
+
+groq_api_key = st.secrets["groq_api_key"]
+os.environ['HF_TOKEN'] = st.secrets["hf_token"]
+os.environ['LANGCHAIN_API_KEY'] = st.secrets["langchain_api_key"]
+os.environ['LANGCHAIN_PROJECT'] = st.secrets["langchain_project"]
+os.environ['LANGCHAIN_TRACING_V2'] = "true"
 
 import streamlit as st
 from markitdown import MarkItDown
