@@ -74,33 +74,44 @@ with tab1:
         # Data Ingestion
         md = MarkItDown(enable_plugins=False)
         st.subheader("Step 1: Upload Your Documents")
-        st.markdown("Upload up to **3 PDFs**. Press *Process Documents* when ready.")
+        st.markdown("Upload up to **2 PDFs**. Press *Process Documents* when ready.")
         uploaded_files = st.file_uploader("", type=["pdf"], accept_multiple_files=True, key="file_uploader")
         if uploaded_files:
             loaders = []
             for i in range(len(uploaded_files)):
-                if i <= 2:
+                if i <= 1:
                     temppdf = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf").name
-                    with open(temppdf, "wb") as file:
-                        file.write(uploaded_files[i].getvalue())
-
-                    md_file = md.convert(temppdf)
                     tempmd = tempfile.NamedTemporaryFile(delete=False, suffix=".md").name
-                    with open(tempmd, "w") as file:
-                        file.write(md_file.markdown)
-                    loader = UnstructuredMarkdownLoader(tempmd)
-                    loaders.append(loader)
-
+                    try:
+                        with open(temppdf, "wb") as file:
+                            file.write(uploaded_files[i].getvalue())
+                        md_file = md.convert(temppdf)
+                        with open(tempmd, "w") as file:
+                            file.write(md_file.markdown)
+                        loader = UnstructuredMarkdownLoader(tempmd)
+                        loaders.append(loader)
+                    finally:
+                        os.remove(temppdf)
+                        os.remove(tempmd)
             if uploaded_files and st.button("Process Documents"):
                 with st.spinner("Processing documents..."):
                     loader_all = MergedDataLoader(loaders=loaders)
                     docs = loader_all.load()
                     splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=200)
                     docs_split = splitter.split_documents(docs)
-                    embedding_model = HuggingFaceEmbeddings(model_name="BAAI/bge-base-en-v1.5")
-                    session_db_path = os.path.join("./db_sessions", session_id)
-                    os.makedirs(session_db_path, exist_ok=True)
-                    vectorstore = Chroma.from_documents(documents=docs_split, embedding=embedding_model, persist_directory=session_db_path)
+                    @st.cache_resource
+                    def load_embedding_model():
+                        return HuggingFaceEmbeddings(model_name="BAAI/bge-base-en-v1.5")
+                    @st.cache_resource
+                    def create_vectorstore(docs_split, session_id: str):
+                        db_path = os.path.join("./db_sessions", session_id)
+                        os.makedirs(db_path, exist_ok=True)
+                        return Chroma.from_documents(
+                            documents=docs_split,
+                            embedding=load_embedding_model(),
+                            persist_directory=db_path
+                        )
+                    vectorstore = create_vectorstore(docs_split, session_id)
                     retriever = vectorstore.as_retriever(search_kwargs={"k": 8}) 
                     st.session_state.retriever = retriever
                     st.success("Documents have been successfully ingested.")
