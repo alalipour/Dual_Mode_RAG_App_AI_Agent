@@ -108,12 +108,12 @@ with tab1:
                     def load_embedding_model():
                         return HuggingFaceEmbeddings(model_name="BAAI/bge-base-en-v1.5")
                     @st.cache_resource
-                    def create_vectorstore(docs_split, session_id: str):
+                    def create_vectorstore(_docs_split, session_id: str):
                         clear_old_sessions()
                         db_path = os.path.join("./db_sessions", session_id)
                         os.makedirs(db_path, exist_ok=True)
                         return Chroma.from_documents(
-                            documents=docs_split,
+                            documents=_docs_split,
                             embedding=load_embedding_model(),
                             persist_directory=db_path
                         )
