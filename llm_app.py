@@ -25,6 +25,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 import tempfile
+import shutil
 
 groq_api_key = st.secrets["GROQ_API_KEY"]
 os.environ['HF_TOKEN'] = st.secrets["HF_TOKEN"]
@@ -97,7 +98,9 @@ with tab1:
                     splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=200)
                     docs_split = splitter.split_documents(docs)
                     embedding_model = HuggingFaceEmbeddings(model_name="BAAI/bge-base-en-v1.5")
-                    vectorstore = Chroma.from_documents(documents=docs_split, embedding=embedding_model, persist_directory="./db")
+                    session_db_path = os.path.join("./db_sessions", session_id)
+                    os.makedirs(session_db_path, exist_ok=True)
+                    vectorstore = Chroma.from_documents(documents=docs_split, embedding=embedding_model, persist_directory=session_db_path)
                     retriever = vectorstore.as_retriever(search_kwargs={"k": 8}) 
                     st.session_state.retriever = retriever
                     st.success("Documents have been successfully ingested.")
@@ -186,6 +189,8 @@ with tab1:
                 with st.spinner("Clearing chat history..."):
                     if "chat_histories" in st.session_state:
                         st.session_state.chat_histories.pop(session_id, None)
+                    session_db_path = os.path.join("./db_sessions", session_id)
+                    shutil.rmtree(session_db_path, ignore_errors=True)
                     st.rerun()
 
 
