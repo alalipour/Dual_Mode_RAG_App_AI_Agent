@@ -35,7 +35,7 @@ os.environ['LANGCHAIN_API_KEY'] = st.secrets["LANGCHAIN_API_KEY"]
 os.environ['LANGCHAIN_PROJECT'] = st.secrets["LANGCHAIN_PROJECT"]
 os.environ['LANGCHAIN_TRACING_V2'] = "true"
 
-def clear_old_sessions(path='./db_sessions', max_age_sec=3600):
+def clear_old_sessions(path='./db_sessions', max_age_sec=600):
     now = time.time()
     for folder in glob.glob(f"{path}/*"):
         if os.path.isdir(folder) and now - os.path.getmtime(folder) > max_age_sec:
