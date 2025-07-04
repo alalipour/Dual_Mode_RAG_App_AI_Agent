@@ -206,9 +206,14 @@ with tab2:
                 st.session_state.tools.append(arxiv)
 
         if st.button("Web Search"):
-            search = DuckDuckGoSearchResults(name="web search")
-            if search not in st.session_state.tools:
-                st.session_state.tools.append(search)
+            try:
+                temp_tool = DuckDuckGoSearchResults()
+                temp_tool.invoke("Obama")
+                search = DuckDuckGoSearchRun(name="web search")
+                if search not in st.session_state.tools:
+                    st.session_state.tools.append(search)
+            except Exception as e:
+                st.error("DuckDuckGo Search tool is not available right now due to hitting the rate limit. Please try again later or use other tools.")
 
         st.sidebar.write("Selected Tools:")
         for tool in st.session_state.tools:
