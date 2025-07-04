@@ -90,17 +90,13 @@ with tab1:
                 if i <= 1:
                     temppdf = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf").name
                     tempmd = tempfile.NamedTemporaryFile(delete=False, suffix=".md").name
-                    try:
-                        with open(temppdf, "wb") as file:
-                            file.write(uploaded_files[i].getvalue())
-                        md_file = md.convert(temppdf)
-                        with open(tempmd, "w") as file:
-                            file.write(md_file.markdown)
-                        loader = UnstructuredMarkdownLoader(tempmd)
-                        loaders.append(loader)
-                    finally:
-                        os.remove(temppdf)
-                        os.remove(tempmd)
+                    with open(temppdf, "wb") as file:
+                        file.write(uploaded_files[i].getvalue())
+                    md_file = md.convert(temppdf)
+                    with open(tempmd, "w") as file:
+                        file.write(md_file.markdown)
+                    loader = UnstructuredMarkdownLoader(tempmd)
+                    loaders.append(loader)
             if uploaded_files and st.button("Process Documents"):
                 with st.spinner("Processing documents..."):
                     loader_all = MergedDataLoader(loaders=loaders)
