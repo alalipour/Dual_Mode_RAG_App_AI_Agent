@@ -14,7 +14,7 @@ from langchain_groq import ChatGroq
 from langchain_community.chat_message_histories import ChatMessageHistory
 from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_core.runnables.history import RunnableWithMessageHistory
-from langchain_community.tools import ArxivQueryRun, WikipediaQueryRun, DuckDuckGoSearchRun
+from langchain_community.tools import ArxivQueryRun, WikipediaQueryRun, DuckDuckGoSearchRun, DuckDuckGoSearchResults
 from langchain_community.utilities import WikipediaAPIWrapper, ArxivAPIWrapper
 from langchain.agents import create_openai_tools_agent
 from langchain import hub
@@ -206,7 +206,7 @@ with tab2:
                 st.session_state.tools.append(arxiv)
 
         if st.button("Web Search"):
-            search = DuckDuckGoSearchRun(name="web search")
+            search = DuckDuckGoSearchResults(name="web search")
             if search not in st.session_state.tools:
                 st.session_state.tools.append(search)
 
