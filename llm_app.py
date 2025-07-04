@@ -26,12 +26,20 @@ from langchain.chains import create_history_aware_retriever, create_retrieval_ch
 from langchain.chains.combine_documents import create_stuff_documents_chain
 import tempfile
 import shutil
+import glob
+import time
 
 groq_api_key = st.secrets["GROQ_API_KEY"]
 os.environ['HF_TOKEN'] = st.secrets["HF_TOKEN"]
 os.environ['LANGCHAIN_API_KEY'] = st.secrets["LANGCHAIN_API_KEY"]
 os.environ['LANGCHAIN_PROJECT'] = st.secrets["LANGCHAIN_PROJECT"]
 os.environ['LANGCHAIN_TRACING_V2'] = "true"
+
+def clear_old_sessions(path='./db_sessions', max_age_sec=3600):
+    now = time.time()
+    for folder in glob.glob(f"{path}/*"):
+        if os.path.isdir(folder) and now - os.path.getmtime(folder) > max_age_sec:
+            shutil.rmtree(folder, ignore_errors=True)
 
 st.title("📚 Document Ingestion & Retrieval App | AI Agent")
 st.info("👋 Welcome! In the sidebar, please select either the RAG mode for document ingestion and retrieval or the AI agent mode for wikipedia, arxiv, and/or web search.")
@@ -98,12 +106,14 @@ with tab1:
                     loader_all = MergedDataLoader(loaders=loaders)
                     docs = loader_all.load()
                     splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=200)
-                    docs_split = splitter.split_documents(docs)
+                    MAX_CHUNKS = 200
+                    docs_split = splitter.split_documents(docs)[:MAX_CHUNKS]
                     @st.cache_resource
                     def load_embedding_model():
                         return HuggingFaceEmbeddings(model_name="BAAI/bge-base-en-v1.5")
                     @st.cache_resource
                     def create_vectorstore(docs_split, session_id: str):
+                        clear_old_sessions()
                         db_path = os.path.join("./db_sessions", session_id)
                         os.makedirs(db_path, exist_ok=True)
                         return Chroma.from_documents(
