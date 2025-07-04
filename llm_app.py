@@ -98,7 +98,6 @@ with tab1:
                     loader = UnstructuredMarkdownLoader(tempmd)
                     loaders.append(loader)
             if uploaded_files and st.button("Process Documents"):
-                with st.spinner("Processing documents..."):
                     loader_all = MergedDataLoader(loaders=loaders)
                     docs = loader_all.load()
                     splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=200)
@@ -117,7 +116,8 @@ with tab1:
                             embedding=load_embedding_model(),
                             persist_directory=db_path
                         )
-                    vectorstore = create_vectorstore(docs_split, session_id)
+                    with st.spinner("Processing documents..."):
+                        vectorstore = create_vectorstore(docs_split, session_id)
                     retriever = vectorstore.as_retriever(search_kwargs={"k": 8}) 
                     st.session_state.retriever = retriever
                     st.success("Documents have been successfully ingested.")
