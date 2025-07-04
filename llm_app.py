@@ -98,9 +98,9 @@ with tab1:
                     splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=200)
                     docs_split = splitter.split_documents(docs)
                     embedding_model = HuggingFaceEmbeddings(model_name="BAAI/bge-base-en-v1.5")
-                    session_db_path = os.path.join("./db_sessions", session_id)
-                    os.makedirs(session_db_path, exist_ok=True)
-                    vectorstore = Chroma.from_documents(documents=docs_split, embedding=embedding_model, persist_directory=session_db_path)
+                    #session_db_path = os.path.join("./db_sessions", session_id)
+                    #os.makedirs(session_db_path, exist_ok=True)
+                    vectorstore = Chroma.from_documents(documents=docs_split, embedding=embedding_model, persist_directory=None)
                     retriever = vectorstore.as_retriever(search_kwargs={"k": 8}) 
                     st.session_state.retriever = retriever
                     st.success("Documents have been successfully ingested.")
