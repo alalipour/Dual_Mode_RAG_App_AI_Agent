@@ -16,7 +16,7 @@ from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_community.tools import ArxivQueryRun, WikipediaQueryRun, DuckDuckGoSearchRun, DuckDuckGoSearchResults
 from langchain_community.utilities import WikipediaAPIWrapper, ArxivAPIWrapper
-from langchain.agents.openai_tools.base import create_openai_tools_agent
+from langchain.agents import create_openai_tools_agent
 from langchain import hub
 from langchain.agents import AgentExecutor
 from langchain.tools.retriever import create_retriever_tool
