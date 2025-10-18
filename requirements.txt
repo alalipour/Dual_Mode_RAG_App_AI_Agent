@@ -1,6 +1,7 @@
 ipykernel
 dotenv
 markitdown[all]
+langchain
 langchain_community
 unstructured
 markdown
